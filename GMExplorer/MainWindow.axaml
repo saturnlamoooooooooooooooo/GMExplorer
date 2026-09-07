@@ -1,0 +1,326 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="760"
+        x:Class="GMExplorer.MainWindow"
+        Title="GMExplorer"
+        Icon="/Assets/logo.png"
+        Width="1240" Height="780" MinWidth="900" MinHeight="560"
+        RequestedThemeVariant="Dark"
+        Background="#080808"
+        DragDrop.AllowDrop="True">
+
+  <Window.Resources>
+    <SolidColorBrush x:Key="Bg">#080808</SolidColorBrush>
+    <SolidColorBrush x:Key="Panel">#101010</SolidColorBrush>
+    <SolidColorBrush x:Key="Rail">#0B0B0B</SolidColorBrush>
+    <SolidColorBrush x:Key="Line">#242424</SolidColorBrush>
+    <SolidColorBrush x:Key="LineSoft">#1A1A1A</SolidColorBrush>
+    <SolidColorBrush x:Key="Text">#F4F4F4</SolidColorBrush>
+    <SolidColorBrush x:Key="Muted">#7E7E7E</SolidColorBrush>
+    <SolidColorBrush x:Key="Accent">#FFFFFF</SolidColorBrush>
+    <SolidColorBrush x:Key="Selected">#1E1E1E</SolidColorBrush>
+    <SolidColorBrush x:Key="Hover">#161616</SolidColorBrush>
+    <SolidColorBrush x:Key="Field">#0D0D0D</SolidColorBrush>
+  </Window.Resources>
+
+  <Window.Styles>
+    <Style Selector="TextBlock">
+      <Setter Property="Foreground" Value="{StaticResource Text}"/>
+      <Setter Property="FontFamily" Value="Inter, Segoe UI, sans-serif"/>
+    </Style>
+    <Style Selector="TextBlock.h1">
+      <Setter Property="FontSize" Value="15"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    <Style Selector="TextBlock.sub">
+      <Setter Property="Foreground" Value="{StaticResource Muted}"/>
+      <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <Style Selector="Button">
+      <Setter Property="Background" Value="#161616"/>
+      <Setter Property="Foreground" Value="{StaticResource Text}"/>
+      <Setter Property="BorderBrush" Value="{StaticResource Line}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="Padding" Value="10,5"/>
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="RenderTransform" Value="scale(1)"/>
+      <Setter Property="Transitions">
+        <Transitions>
+          <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.12" Easing="CubicEaseOut"/>
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="Button /template/ ContentPresenter">
+      <Setter Property="Transitions">
+        <Transitions>
+          <BrushTransition Property="Background" Duration="0:0:0.16" Easing="CubicEaseOut"/>
+          <BrushTransition Property="BorderBrush" Duration="0:0:0.16" Easing="CubicEaseOut"/>
+          <BrushTransition Property="Foreground" Duration="0:0:0.16" Easing="CubicEaseOut"/>
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="Button:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#232323"/>
+      <Setter Property="BorderBrush" Value="#3A3A3A"/>
+      <Setter Property="Foreground" Value="{StaticResource Text}"/>
+    </Style>
+    <Style Selector="Button:pressed">
+      <Setter Property="RenderTransform" Value="scale(0.96)"/>
+    </Style>
+
+    <Style Selector="Button.accent">
+      <Setter Property="Background" Value="{StaticResource Accent}"/>
+      <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+      <Setter Property="Foreground" Value="#0A0A0A"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    <Style Selector="Button.accent /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource Accent}"/>
+      <Setter Property="Foreground" Value="#0A0A0A"/>
+    </Style>
+    <Style Selector="Button.accent:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#D8D8D8"/>
+      <Setter Property="BorderBrush" Value="#D8D8D8"/>
+      <Setter Property="Foreground" Value="#0A0A0A"/>
+    </Style>
+
+    <Style Selector="Button.tab">
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="Padding" Value="12,4"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+      <Setter Property="Foreground" Value="{StaticResource Muted}"/>
+    </Style>
+    <Style Selector="Button.tab /template/ ContentPresenter">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+    <Style Selector="Button.tab.on /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource Selected}"/>
+      <Setter Property="BorderBrush" Value="{StaticResource Line}"/>
+      <Setter Property="Foreground" Value="{StaticResource Text}"/>
+    </Style>
+
+    <Style Selector="TextBox">
+      <Setter Property="Background" Value="{StaticResource Field}"/>
+      <Setter Property="Foreground" Value="{StaticResource Text}"/>
+      <Setter Property="BorderBrush" Value="{StaticResource Line}"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="SelectionBrush" Value="#3A3A3A"/>
+      <Setter Property="CaretBrush" Value="{StaticResource Accent}"/>
+    </Style>
+    <Style Selector="TextBox /template/ Border#PART_BorderElement">
+      <Setter Property="Transitions">
+        <Transitions>
+          <BrushTransition Property="BorderBrush" Duration="0:0:0.16" Easing="CubicEaseOut"/>
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+      <Setter Property="BorderBrush" Value="#5A5A5A"/>
+    </Style>
+
+    <Style Selector="ListBox">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    <Style Selector="ListBoxItem">
+      <Setter Property="Padding" Value="10,5"/>
+      <Setter Property="MinHeight" Value="0"/>
+      <Setter Property="CornerRadius" Value="5"/>
+      <Setter Property="Margin" Value="4,1"/>
+    </Style>
+    <Style Selector="ListBoxItem /template/ ContentPresenter">
+      <Setter Property="Transitions">
+        <Transitions>
+          <BrushTransition Property="Background" Duration="0:0:0.14" Easing="CubicEaseOut"/>
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource Hover}"/>
+    </Style>
+    <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource Selected}"/>
+    </Style>
+
+    <Style Selector="CheckBox">
+      <Setter Property="Foreground" Value="{StaticResource Muted}"/>
+    </Style>
+    <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+      <Setter Property="Background" Value="{StaticResource Accent}"/>
+      <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+    </Style>
+    <Style Selector="CheckBox:checked /template/ Path#CheckGlyph">
+      <Setter Property="Fill" Value="#0A0A0A"/>
+    </Style>
+
+    <Style Selector="Slider /template/ Thumb">
+      <Setter Property="Background" Value="{StaticResource Accent}"/>
+    </Style>
+
+    <Style Selector="Image#Preview">
+      <Setter Property="Transitions">
+        <Transitions>
+          <DoubleTransition Property="Width" Duration="0:0:0.15" Easing="CubicEaseOut"/>
+          <DoubleTransition Property="Height" Duration="0:0:0.15" Easing="CubicEaseOut"/>
+        </Transitions>
+      </Setter>
+    </Style>
+
+    <Style Selector="Border#DropZone">
+      <Setter Property="Transitions">
+        <Transitions>
+          <BrushTransition Property="BorderBrush" Duration="0:0:0.2" Easing="CubicEaseOut"/>
+          <BrushTransition Property="Background" Duration="0:0:0.2" Easing="CubicEaseOut"/>
+        </Transitions>
+      </Setter>
+    </Style>
+
+    <Style Selector="Border#Overlay">
+      <Setter Property="Transitions">
+        <Transitions>
+          <DoubleTransition Property="Opacity" Duration="0:0:0.22" Easing="CubicEaseOut"/>
+        </Transitions>
+      </Setter>
+    </Style>
+  </Window.Styles>
+
+  <Grid RowDefinitions="52,*,28">
+    <Border Grid.Row="0" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="Auto,*,Auto" Margin="14,0">
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+          <StackPanel VerticalAlignment="Center">
+            <TextBlock x:Name="HeaderTitle" Text="GMExplorer" Classes="h1"/>
+            <TextBlock x:Name="HeaderSub" Text="no file loaded" Classes="sub"/>
+          </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <Button x:Name="OpenButton" Content="Open game"/>
+          <Button x:Name="CloseButton" Content="Close" IsVisible="False"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Grid Grid.Row="1" x:Name="Body" ColumnDefinitions="176,1,300,1,*" IsVisible="False">
+      <Border Grid.Column="0" Background="{StaticResource Rail}">
+        <ListBox x:Name="CategoryList" Margin="0,8"/>
+      </Border>
+      <Border Grid.Column="1" Background="{StaticResource Line}"/>
+
+      <Grid Grid.Column="2" RowDefinitions="Auto,*" Background="{StaticResource Bg}">
+        <TextBox Grid.Row="0" x:Name="SearchBox" Watermark="Search" Margin="8" Padding="8,5"/>
+        <ListBox Grid.Row="1" x:Name="ItemList"/>
+      </Grid>
+      <Border Grid.Column="3" Background="{StaticResource Line}"/>
+
+      <Grid Grid.Column="4" RowDefinitions="Auto,*" Background="{StaticResource Panel}">
+        <Border Grid.Row="0" BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1" Padding="16,12">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Grid.Column="0" Spacing="2">
+              <TextBlock x:Name="DetailTitle" Text="" Classes="h1" TextTrimming="CharacterEllipsis"/>
+              <TextBlock x:Name="DetailSub" Text="" Classes="sub" TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+              <Button x:Name="ExportButton" Content="Export" Classes="accent" IsVisible="False"/>
+              <Button x:Name="ExportAllButton" Content="Export all" IsVisible="False"/>
+            </StackPanel>
+          </Grid>
+        </Border>
+
+        <Panel Grid.Row="1" x:Name="DetailBody">
+          <Grid x:Name="ImagePane" IsVisible="False" RowDefinitions="Auto,*">
+            <Border Grid.Row="0" Padding="16,8" BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1">
+              <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <Button x:Name="PrevFrame" Content="&#x2039;" Width="30"/>
+                <TextBlock x:Name="FrameLabel" Text="" VerticalAlignment="Center" Classes="sub" MinWidth="90"
+                           TextAlignment="Center"/>
+                <Button x:Name="NextFrame" Content="&#x203A;" Width="30"/>
+                <Border Width="1" Background="{StaticResource Line}" Margin="4,2"/>
+                <Button x:Name="ZoomOut" Content="&#x2212;" Width="30"/>
+                <TextBlock x:Name="ZoomLabel" Text="100%" VerticalAlignment="Center" Classes="sub" MinWidth="46"
+                           TextAlignment="Center"/>
+                <Button x:Name="ZoomIn" Content="+" Width="30"/>
+                <Button x:Name="ZoomFit" Content="Fit"/>
+                <Border Width="1" Background="{StaticResource Line}" Margin="4,2"/>
+                <CheckBox x:Name="ShowChecker" Content="Checkerboard" IsChecked="True"/>
+              </StackPanel>
+            </Border>
+            <ScrollViewer Grid.Row="1" x:Name="ImageScroll"
+                          HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+              <Border x:Name="ImageHost" Padding="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Border x:Name="CheckerBorder" BorderBrush="{StaticResource Line}" BorderThickness="1">
+                  <Image x:Name="Preview" Stretch="Fill"/>
+                </Border>
+              </Border>
+            </ScrollViewer>
+          </Grid>
+
+          <StackPanel x:Name="AudioPane" IsVisible="False" Margin="20" Spacing="14">
+            <Border Background="{StaticResource Field}" CornerRadius="10" BorderBrush="{StaticResource Line}"
+                    BorderThickness="1" Padding="18">
+              <StackPanel Spacing="14">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                  <Button x:Name="PlayButton" Content="Play" Classes="accent" Width="76"/>
+                  <Button x:Name="StopButton" Content="Stop"/>
+                  <TextBlock x:Name="TimeLabel" Text="0:00 / 0:00" VerticalAlignment="Center" Classes="sub"/>
+                </StackPanel>
+                <Slider x:Name="SeekSlider" Minimum="0" Maximum="1000" Value="0"/>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                  <TextBlock Text="Volume" VerticalAlignment="Center" Classes="sub"/>
+                  <Slider x:Name="VolumeSlider" Minimum="0" Maximum="1" Value="0.8" Width="160"/>
+                </StackPanel>
+                <TextBlock x:Name="AudioError" Text="" Classes="sub" Foreground="#D0D0D0" IsVisible="False"/>
+              </StackPanel>
+            </Border>
+            <StackPanel x:Name="AudioFacts" Spacing="6"/>
+          </StackPanel>
+
+          <Grid x:Name="CodePane" IsVisible="False" RowDefinitions="Auto,*">
+            <Border Grid.Row="0" Padding="16,8" BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Button x:Name="TabDecompiled" Content="Decompiled" Classes="tab on"/>
+                <Button x:Name="TabDisassembly" Content="Disassembly" Classes="tab"/>
+              </StackPanel>
+            </Border>
+            <TextBox Grid.Row="1" x:Name="CodeText" IsReadOnly="True" AcceptsReturn="True"
+                     TextWrapping="NoWrap" BorderThickness="0" CornerRadius="0" Background="Transparent"
+                     FontFamily="Cascadia Mono, Consolas, monospace" FontSize="12.5" Padding="16,10"/>
+          </Grid>
+
+          <ScrollViewer x:Name="InfoPane" IsVisible="False">
+            <StackPanel x:Name="InfoStack" Margin="20" Spacing="8"/>
+          </ScrollViewer>
+
+          <TextBlock x:Name="EmptyDetail" Text="Select something on the left"
+                     Classes="sub" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Panel>
+      </Grid>
+    </Grid>
+
+    <Border Grid.Row="2" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0">
+      <Grid ColumnDefinitions="*,Auto" Margin="12,0">
+        <TextBlock x:Name="StatusText" Text="Drop a game executable onto the window to begin"
+                   Classes="sub" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="1" x:Name="StatusRight" Text="" Classes="sub" VerticalAlignment="Center"/>
+      </Grid>
+    </Border>
+
+    <Border x:Name="Overlay" Grid.Row="0" Grid.RowSpan="3" Background="#080808">
+      <Border Margin="60" BorderBrush="#282828" BorderThickness="2" CornerRadius="16"
+              Background="#0D0D0D" x:Name="DropZone">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
+          <TextBlock Text="Drop the game's .exe here" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+          <TextBlock x:Name="OverlaySub" Classes="sub" HorizontalAlignment="Center"
+                     Text="loads its data file, libraries, FMOD banks and anything baked into the executable"/>
+          <Button x:Name="OverlayOpen" Content="or browse for a game" Classes="accent"
+                  HorizontalAlignment="Center" Margin="0,6,0,0"/>
+        </StackPanel>
+      </Border>
+    </Border>
+  </Grid>
+</Window>

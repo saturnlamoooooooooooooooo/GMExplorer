@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <AssemblyName>GMExplorer</AssemblyName>
+    <RootNamespace>GMExplorer</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <PlatformTarget>x64</PlatformTarget>
+    <ApplicationIcon>Assets\logo.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\monoc\.nuget\packages\naudio.vorbis\1.5.0\contentFiles\any\netstandard2.0\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.0.5" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.5" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.5" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.5" />
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\native\bin\x64\Release\gmnative.dll" Condition="Exists('..\native\bin\x64\Release\gmnative.dll')" Link="gmnative.dll" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\native\bin\x64\Debug\gmnative.dll" Condition="!Exists('..\native\bin\x64\Release\gmnative.dll') And Exists('..\native\bin\x64\Debug\gmnative.dll')" Link="gmnative.dll" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

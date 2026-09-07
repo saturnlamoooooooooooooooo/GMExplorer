@@ -1,0 +1,43 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GMExplorer.App"
+             RequestedThemeVariant="Dark">
+
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+
+    <Application.Resources>
+        <Color x:Key="SystemAccentColor">#FFFFFF</Color>
+        <Color x:Key="SystemAccentColorLight1">#FFFFFF</Color>
+        <Color x:Key="SystemAccentColorLight2">#FFFFFF</Color>
+        <Color x:Key="SystemAccentColorLight3">#FFFFFF</Color>
+        <Color x:Key="SystemAccentColorDark1">#E4E4E4</Color>
+        <Color x:Key="SystemAccentColorDark2">#C6C6C6</Color>
+        <Color x:Key="SystemAccentColorDark3">#9E9E9E</Color>
+
+        <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="SystemControlForegroundAccentBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="SliderTrackValueFill" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="#E4E4E4"/>
+        <SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="#CFCFCF"/>
+        <SolidColorBrush x:Key="SliderTrackValueFillDisabled" Color="#4A4A4A"/>
+        <SolidColorBrush x:Key="SliderTrackFill" Color="#2B2B2B"/>
+        <SolidColorBrush x:Key="SliderTrackFillPointerOver" Color="#333333"/>
+        <SolidColorBrush x:Key="SliderTrackFillPressed" Color="#333333"/>
+        <SolidColorBrush x:Key="SliderThumbBackground" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="SliderThumbBackgroundPointerOver" Color="#E4E4E4"/>
+        <SolidColorBrush x:Key="SliderThumbBackgroundPressed" Color="#CFCFCF"/>
+        <SolidColorBrush x:Key="SliderInnerThumbBackground" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="#E4E4E4"/>
+        <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeChecked" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" Color="#E4E4E4"/>
+        <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#0A0A0A"/>
+        <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#0A0A0A"/>
+        <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="#3A3A3A"/>
+        <SolidColorBrush x:Key="ScrollBarThumbFill" Color="#3A3A3A"/>
+        <SolidColorBrush x:Key="ScrollBarThumbFillPointerOver" Color="#4E4E4E"/>
+        <SolidColorBrush x:Key="ScrollBarThumbFillPressed" Color="#5E5E5E"/>
+    </Application.Resources>
+</Application>

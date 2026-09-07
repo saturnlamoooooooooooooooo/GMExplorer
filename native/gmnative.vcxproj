@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{3F8B2D41-9C6E-4A57-B0D2-5E1C7A930F11}</ProjectGuid>
+    <RootNamespace>gmnative</RootNamespace>
+    <ProjectName>gmnative</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
+            Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
+            Label="LocalAppDataPlatform" />
+  </ImportGroup>
+
+  <!--
+    Zydis is an external dependency: the amalgamated Zydis.c and Zydis.h live in
+    native\extern\Zydis. Point the build somewhere else with /p:ZydisDir=<folder>
+    or a ZYDIS_DIR environment variable.
+  -->
+  <PropertyGroup Label="Zydis">
+    <ZydisDir Condition="'$(ZydisDir)' == '' And '$(ZYDIS_DIR)' != ''">$(ZYDIS_DIR)</ZydisDir>
+    <ZydisDir Condition="'$(ZydisDir)' == ''">$(ProjectDir)extern\Zydis</ZydisDir>
+    <!-- ZydisDir may come in as a global property, which cannot be reassigned, so normalise
+         into a separate property that the rest of the project uses. -->
+    <ZydisPath>$([MSBuild]::EnsureTrailingSlash('$(ZydisDir)'))</ZydisPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>gmnative</TargetName>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>ZYDIS_STATIC_BUILD;ZYAN_STATIC_BUILD;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ZydisPath);$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>Level3</WarningLevel>
+      <DisableSpecificWarnings>4996;4267;4244;4018</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <CompileAs>CompileAsC</CompileAs>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <ClCompile Include="src\gmnative.c" />
+    <ClCompile Include="$(ZydisPath)Zydis.c">
+      <ObjectFileName>$(IntDir)Zydis.obj</ObjectFileName>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\gmnative.h" />
+    <ClInclude Include="$(ZydisPath)Zydis.h" />
+  </ItemGroup>
+
+  <Target Name="CheckZydis" BeforeTargets="ClCompile">
+    <Error Condition="!Exists('$(ZydisPath)Zydis.c')"
+           Text="Zydis was not found at '$(ZydisPath)'. Put the amalgamated Zydis.c and Zydis.h there, or build with /p:ZydisDir=&lt;folder&gt;. They come from the amalgamated build of https://github.com/zyantific/zydis ." />
+    <Message Importance="high" Text="gmnative: Zydis from $(ZydisPath)" />
+  </Target>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>
