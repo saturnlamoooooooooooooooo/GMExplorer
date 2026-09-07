@@ -34,9 +34,24 @@
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
   </ItemGroup>
+  <!-- Published builds carry the analyser inside the executable, so a release is one file. -->
+  <ItemGroup Condition="Exists('..\native\bin\x64\Release\gmnative.dll')">
+    <EmbeddedResource Include="..\native\bin\x64\Release\gmnative.dll" LogicalName="gmnative.dll" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Include="..\native\bin\x64\Release\gmnative.dll" Condition="Exists('..\native\bin\x64\Release\gmnative.dll')" Link="gmnative.dll" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\native\bin\x64\Debug\gmnative.dll" Condition="!Exists('..\native\bin\x64\Release\gmnative.dll') And Exists('..\native\bin\x64\Debug\gmnative.dll')" Link="gmnative.dll" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+
+  <!-- A single-file publish should really be a single file: drop the native .pdb files and
+       anything else the runtime packs bring along. -->
+  <Target Name="TrimPublishFolder" AfterTargets="Publish" Condition="'$(PublishSingleFile)' == 'true'">
+    <ItemGroup>
+      <PublishLeftovers Include="$(PublishDir)**\*" Exclude="$(PublishDir)$(AssemblyName)$(_NativeExecutableExtension);$(PublishDir)$(AssemblyName).exe" />
+    </ItemGroup>
+    <Delete Files="@(PublishLeftovers)" />
+    <Message Importance="high" Text="Published $(PublishDir)$(AssemblyName).exe" />
+  </Target>
 
 </Project>

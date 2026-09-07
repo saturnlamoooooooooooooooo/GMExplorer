@@ -94,13 +94,45 @@ public sealed class NativeCode : IDisposable
                     return handle;
                 }
             }
+            // Single-file builds carry the analyser inside the executable.
+            var unpacked = Unpack();
+            if (unpacked != null && NativeLibrary.TryLoad(unpacked, out var embedded))
+            {
+                libraryPath = unpacked;
+                return embedded;
+            }
             return IntPtr.Zero;
         });
     }
 
+    /// <summary>Writes the embedded copy of the analyser to a temporary file, once per version.</summary>
+    static string? Unpack()
+    {
+        try
+        {
+            var asm = typeof(NativeCode).Assembly;
+            using var src = asm.GetManifestResourceStream("gmnative.dll");
+            if (src == null) return null;
+
+            string dir = Path.Combine(Path.GetTempPath(), "GMExplorer",
+                                      asm.GetName().Version?.ToString() ?? "native");
+            Directory.CreateDirectory(dir);
+            string target = Path.Combine(dir, "gmnative.dll");
+
+            if (!File.Exists(target) || new FileInfo(target).Length != src.Length)
+            {
+                using var dst = File.Create(target);
+                src.CopyTo(dst);
+            }
+            return target;
+        }
+        catch { return null; }        // already loaded by another instance, or no write access
+    }
+
     static IEnumerable<string> Candidates()
     {
-        string appDir = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location ?? "") ?? ".";
+        // AppContext.BaseDirectory, not Assembly.Location: the latter is empty in single-file builds.
+        string appDir = AppContext.BaseDirectory;
         yield return Path.Combine(appDir, "gmnative.dll");
         var dir = new DirectoryInfo(appDir);
         for (int i = 0; i < 6 && dir != null; i++, dir = dir.Parent)

@@ -86,6 +86,17 @@ The whole solution, including the native analyser:
 msbuild GMExplorer.sln -p:Configuration=Release
 ```
 
+### A single-file release
+
+```bash
+publish.cmd
+```
+
+Produces `publish\GMExplorer.exe` — one ~48 MB file that needs nothing installed, not even the
+.NET runtime. The runtime, Avalonia's native libraries and `gmnative.dll` are all inside it; the
+analyser is unpacked to a temp folder on first use. Build the native project before publishing if
+you want it included, which `publish.cmd` does for you.
+
 ### The native analyser (optional)
 
 `native/gmnative.vcxproj` builds `gmnative.dll`, which reads the machine code of YYC games. It is
