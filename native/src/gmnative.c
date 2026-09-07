@@ -5,7 +5,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#if defined(__has_include)
+#if __has_include(<Zydis/Zydis.h>)
+#include <Zydis/Zydis.h>
+#else
 #include "Zydis.h"
+#endif
+#else
+#include <Zydis/Zydis.h>
+#endif
 #include "gmnative.h"
 #define MAX_HINTS 65536
 

@@ -42,16 +42,9 @@
             Label="LocalAppDataPlatform" />
   </ImportGroup>
 
-  <!--
-    Zydis is an external dependency: the amalgamated Zydis.c and Zydis.h live in
-    native\extern\Zydis. Point the build somewhere else with /p:ZydisDir=<folder>
-    or a ZYDIS_DIR environment variable.
-  -->
   <PropertyGroup Label="Zydis">
     <ZydisDir Condition="'$(ZydisDir)' == '' And '$(ZYDIS_DIR)' != ''">$(ZYDIS_DIR)</ZydisDir>
     <ZydisDir Condition="'$(ZydisDir)' == ''">$(ProjectDir)extern\Zydis</ZydisDir>
-    <!-- ZydisDir may come in as a global property, which cannot be reassigned, so normalise
-         into a separate property that the rest of the project uses. -->
     <ZydisPath>$([MSBuild]::EnsureTrailingSlash('$(ZydisDir)'))</ZydisPath>
   </PropertyGroup>
 
@@ -63,8 +56,8 @@
 
   <ItemDefinitionGroup>
     <ClCompile>
-      <PreprocessorDefinitions>ZYDIS_STATIC_BUILD;ZYAN_STATIC_BUILD;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ZydisPath);$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ZYDIS_STATIC_BUILD;ZYCORE_STATIC_BUILD;ZYAN_STATIC_BUILD;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ZydisPath);$(ZydisPath)include;$(ZydisPath)src;$(ZydisPath)dependencies\zycore\include;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4996;4267;4244;4018</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -103,18 +96,25 @@
 
   <ItemGroup>
     <ClCompile Include="src\gmnative.c" />
-    <ClCompile Include="$(ZydisPath)Zydis.c">
-      <ObjectFileName>$(IntDir)Zydis.obj</ObjectFileName>
+    <ClCompile Include="$(ZydisPath)src\*.c">
+      <ObjectFileName>$(IntDir)zydis\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(ZydisPath)dependencies\zycore\src\*.c">
+      <ObjectFileName>$(IntDir)zycore\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(ZydisPath)dependencies\zycore\src\API\*.c">
+      <ObjectFileName>$(IntDir)zycore\api\</ObjectFileName>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\gmnative.h" />
-    <ClInclude Include="$(ZydisPath)Zydis.h" />
   </ItemGroup>
 
   <Target Name="CheckZydis" BeforeTargets="ClCompile">
-    <Error Condition="!Exists('$(ZydisPath)Zydis.c')"
-           Text="Zydis was not found at '$(ZydisPath)'. Put the amalgamated Zydis.c and Zydis.h there, or build with /p:ZydisDir=&lt;folder&gt;. They come from the amalgamated build of https://github.com/zyantific/zydis ." />
+    <Error Condition="!Exists('$(ZydisPath)include\Zydis\Zydis.h')"
+           Text="Zydis was not found at '$(ZydisPath)'. It is a git submodule: run &quot;git submodule update --init --recursive&quot;, or build with /p:ZydisDir=&lt;path to a zydis checkout&gt;." />
+    <Error Condition="!Exists('$(ZydisPath)dependencies\zycore\include\Zycore\Zycore.h')"
+           Text="Zycore is missing from '$(ZydisPath)dependencies\zycore'. It is Zydis&apos;s own submodule: run &quot;git submodule update --init --recursive&quot;." />
     <Message Importance="high" Text="gmnative: Zydis from $(ZydisPath)" />
   </Target>
 

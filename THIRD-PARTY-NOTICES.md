@@ -28,8 +28,8 @@ Copyright (c) 2000-2018 SharpZipLib Contributors — https://github.com/icsharpc
 
 Copyright (c) 2014-2024 Florian Bernd, Joel Höner — https://github.com/zyantific/zydis
 
-Compiled into `gmnative.dll` from the amalgamated `Zydis.c` / `Zydis.h`, which carry the full
-licence text in their file headers.
+Included as a git submodule at `native/extern/Zydis` and compiled into `gmnative.dll` from source.
+Its own `LICENSE` file and per-file licence headers come with the submodule.
 
 ---
 

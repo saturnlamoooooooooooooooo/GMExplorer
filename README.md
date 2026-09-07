@@ -47,15 +47,40 @@ WAV/OGG, code as `.gml`.
 
 Read-only by design: GMExplorer never writes to the game.
 
+## Requirements
+
+**To run**
+
+- Windows 10 or 11, 64-bit
+- [.NET 9 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/9.0) — unless you publish
+  self-contained, in which case nothing else is needed
+- [Microsoft Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe) —
+  only for some games. GMExplorer's own binaries link the CRT statically and do not need it, but
+  FMOD bank decoding loads the game's own `fmod.dll`, and some builds of that library do.
+
+**To build**
+
+- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- Visual Studio 2022 with *Desktop development with C++* — only for the optional native analyser
+- git, for the Zydis submodule
+
 ## Building
 
-Needs the [.NET 9 SDK](https://dotnet.microsoft.com/download). The app alone:
+Clone with submodules, so Zydis comes along:
+
+```bash
+git clone --recursive https://github.com/<you>/GMExplorer
+```
+
+In an existing clone: `git submodule update --init --recursive`.
+
+The app alone:
 
 ```bash
 dotnet build GMExplorer/GMExplorer.csproj -c Release
 ```
 
-The whole solution, including the native analyser, needs Visual Studio 2022 with the C++ tools:
+The whole solution, including the native analyser:
 
 ```bash
 msbuild GMExplorer.sln -p:Configuration=Release
@@ -63,16 +88,17 @@ msbuild GMExplorer.sln -p:Configuration=Release
 
 ### The native analyser (optional)
 
-`native/gmnative.vcxproj` builds `gmnative.dll`, which reads the machine code of YYC games. It
-depends on [Zydis](https://github.com/zyantific/zydis) — the amalgamated `Zydis.c` and `Zydis.h`,
-which live in `native/extern/Zydis/`. Point the build at a copy elsewhere with either:
+`native/gmnative.vcxproj` builds `gmnative.dll`, which reads the machine code of YYC games. It is
+compiled straight from the [Zydis](https://github.com/zyantific/zydis) submodule in
+`native/extern/Zydis` (and Zycore, Zydis's own submodule) — no CMake step. To build against a Zydis
+checkout somewhere else:
 
 ```bash
-msbuild native\gmnative.vcxproj -p:Configuration=Release -p:Platform=x64 -p:ZydisDir=C:\path\to\Zydis
+msbuild native\gmnative.vcxproj -p:Configuration=Release -p:Platform=x64 -p:ZydisDir=C:\path\to\zydis
 ```
 
-or a `ZYDIS_DIR` environment variable. The app copies the DLL into its output automatically and
-runs fine without it — the *Native code* tab just explains that it is missing.
+A `ZYDIS_DIR` environment variable works too. The app copies the DLL into its output automatically
+and runs fine without it — the *Native code* tab just explains that it is missing.
 
 ### Headless self-check
 
@@ -137,7 +163,8 @@ GMExplorer/
   MainWindow.axaml     the whole interface
 native/
   gmnative.vcxproj     x64 DLL: PE analysis + Zydis disassembly
-  extern/Zydis/        external dependency, see above
+  src/gmnative.c       PE parsing, YYC name recovery, disassembly
+  extern/Zydis/        git submodule -> github.com/zyantific/zydis
 ```
 
 ## Built with
